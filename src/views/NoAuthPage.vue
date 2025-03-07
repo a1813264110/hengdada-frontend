@@ -1,17 +1,16 @@
 <template>
-  <div id="home">
+  <div id="noAuth">
     <h1>{{ name }}</h1>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 
-const name = "HomeView";
+const name = "无权限";
 </script>
 
 <style scoped>
-#home {
+#noAuth {
 }
 </style>
