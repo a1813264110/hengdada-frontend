@@ -1,5 +1,5 @@
 <template>
-  <div id="adminUserPage">
+  <div id="adminAppPage">
     <a-form
       style="marginbottom: '20px'"
       label-align="left"
@@ -24,6 +24,9 @@
         <a-button type="primary" html-type="submit" style="width: 100px">
           搜索
         </a-button>
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" @click="showAddModal"> 新增应用 </a-button>
       </a-form-item>
     </a-form>
     <a-table
@@ -99,6 +102,50 @@
         </a-form-item>
       </a-form>
     </a-modal>
+
+    <!-- 添加新增应用对话框 -->
+    <a-modal
+      v-model:visible="addModalVisible"
+      title="新增应用"
+      @ok="handleAdd"
+      @cancel="closeAddModal"
+    >
+      <a-form :model="addForm" layout="vertical">
+        <a-form-item
+          field="appName"
+          label="应用名称"
+          :rules="[{ required: true, message: '请输入应用名称' }]"
+        >
+          <a-input v-model="addForm.appName" placeholder="请输入应用名称" />
+        </a-form-item>
+        <a-form-item field="appDesc" label="应用描述">
+          <a-textarea v-model="addForm.appDesc" placeholder="请输入应用描述" />
+        </a-form-item>
+        <a-form-item field="appIcon" label="应用图标">
+          <a-input v-model="addForm.appIcon" placeholder="请输入应用图标URL" />
+        </a-form-item>
+        <a-form-item
+          field="appType"
+          label="应用类型"
+          :rules="[{ required: true, message: '请选择应用类型' }]"
+        >
+          <a-radio-group v-model="addForm.appType">
+            <a-radio :value="0">得分类</a-radio>
+            <a-radio :value="1">测评类</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item
+          field="scoringStrategy"
+          label="评分策略"
+          :rules="[{ required: true, message: '请选择评分策略' }]"
+        >
+          <a-radio-group v-model="addForm.scoringStrategy">
+            <a-radio :value="0">自定义</a-radio>
+            <a-radio :value="1">AI</a-radio>
+          </a-radio-group>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -114,6 +161,7 @@ import {
   deleteAppUsingPost,
   listAppByPageUsingPost,
   doAppReviewUsingPost,
+  addAppUsingPost,
 } from "@/api/appController";
 
 const formSearchParams = ref<API.AppQueryRequest>({});
@@ -143,6 +191,16 @@ const discontinueModalVisible = ref(false);
 const discontinueForm = ref({
   id: 0,
   reviewMessage: "",
+});
+
+// 新增应用相关的状态
+const addModalVisible = ref(false);
+const addForm = ref({
+  appName: "",
+  appDesc: "",
+  appIcon: "",
+  appType: 0,
+  scoringStrategy: 0,
 });
 
 /**
@@ -320,9 +378,45 @@ const handleDiscontinue = async () => {
 const doDelete = (record: API.App) => {
   showDiscontinueModal(record);
 };
+
+// 显示新增对话框
+const showAddModal = () => {
+  addForm.value = {
+    appName: "",
+    appDesc: "",
+    appIcon: "",
+    appType: 0,
+    scoringStrategy: 0,
+  };
+  addModalVisible.value = true;
+};
+
+// 关闭新增对话框
+const closeAddModal = () => {
+  addModalVisible.value = false;
+};
+
+// 处理新增操作
+const handleAdd = async () => {
+  // 表单验证
+  if (!addForm.value.appName) {
+    message.error("请输入应用名称");
+    return;
+  }
+
+  const res = await addAppUsingPost(addForm.value);
+
+  if (res.data.code === 0) {
+    message.success("新增应用成功");
+    addModalVisible.value = false;
+    loadData(); // 重新加载数据
+  } else {
+    message.error("新增应用失败：" + res.data.message);
+  }
+};
 </script>
 
 <style scoped>
-#adminUserPage {
+#adminAppPage {
 }
 </style>
