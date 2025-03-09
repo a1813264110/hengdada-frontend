@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/HomePage.vue";
 import UserLayout from "../layouts/UserLayout.vue";
 import ACCESS_ENUM from "@/access/accessEnum";
 import NoAuthPage from "@/views/NoAuthPage.vue";
@@ -10,11 +10,12 @@ import AdminAppPage from "@/views/admin/AdminAppPage.vue";
 import AdminQuestionPage from "@/views/admin/AdminQuestionPage.vue";
 import AdminScoringResultPage from "@/views/admin/AdminScoringResultPage.vue";
 import AdminUserAnswerPage from "@/views/admin/AdminUserAnswerPage.vue";
+import HomePage from "../views/HomePage.vue";
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "主页",
+    component: HomePage,
   },
   {
     path: "/admin/user",
@@ -61,7 +62,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: "无权限",
     component: NoAuthPage,
     meta: {
-      access: ACCESS_ENUM.USER,
+      hideInMenu: true,
     },
   },
   {
@@ -91,15 +92,5 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       hideInMenu: true,
     },
-  },
-
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
 ];

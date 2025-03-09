@@ -32,8 +32,11 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
 }
 .content {
   background: linear-gradient(to right, #fefefe, #fff);
-  margin-bottom: 28px;
   padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 28px;
+  box-sizing: border-box;
 }
 .header {
   margin-bottom: 16px;
