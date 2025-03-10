@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="homePage">
     <div class="searchBar">
       <a-input-search
         :style="{ width: '320px' }"
@@ -87,7 +87,7 @@ watchEffect(() => {
 });
 </script>
 <style scoped>
-#home {
+#homePage {
 }
 .searchBar {
   text-align: center;
