@@ -8,4 +8,4 @@ import "@/access";
 import "bytemd/dist/index.css";
 
 const pinia = createPinia();
-createApp(App).use(ArcoVue).use(router).use(pinia).mount("#app");
+createApp(App).use(ArcoVue).use(pinia).use(router).mount("#app");

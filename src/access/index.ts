@@ -5,8 +5,14 @@ import checkAccess from "./checkAccess";
 
 router.beforeEach(async (to, from, next) => {
   const loginUserStore = useLoginUserStore();
-  const loginUser = loginUserStore.loginUser;
-  console.log("登陆用户信息", loginUser);
+  let loginUser = loginUserStore.loginUser;
+  // 如果之前没有尝试获取过登录用户信息，才自动登录
+
+  if (!loginUser || !loginUser.userRole) {
+    // 加 await 是为了等待用户登录成功并获取到值后，再执行后续操作
+    await loginUserStore.fetchLoginUser();
+    loginUser = loginUserStore.loginUser;
+  }
   const needAccess = (to.meta?.access as string) ?? ACCESS_ENUM.NOT_LOGIN;
   // 要跳转的页面必须要登陆
   if (needAccess !== ACCESS_ENUM.NOT_LOGIN) {
