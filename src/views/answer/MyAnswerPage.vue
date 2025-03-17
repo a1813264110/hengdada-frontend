@@ -1,83 +1,75 @@
 <template>
-  <a-form
-    :model="formSearchParams"
-    :style="{ marginBottom: '20px' }"
-    layout="inline"
-    @submit="doSearch"
-  >
-    <a-form-item field="resultName" label="结果名称">
-      <a-input
-        v-model="formSearchParams.resultName"
-        placeholder="请输入结果名称"
-        allow-clear
-      />
-    </a-form-item>
-    <a-form-item field="resultDesc" label="结果描述">
-      <a-input
-        v-model="formSearchParams.resultDesc"
-        placeholder="请输入结果描述"
-        allow-clear
-      />
-    </a-form-item>
-    <a-form-item field="appId" label="应用 id">
-      <a-input
-        v-model="formSearchParams.appId"
-        placeholder="请输入应用 id"
-        allow-clear
-      />
-    </a-form-item>
-    <a-form-item field="userId" label="用户 id">
-      <a-input
-        v-model="formSearchParams.userId"
-        placeholder="请输入用户 id"
-        allow-clear
-      />
-    </a-form-item>
-    <a-form-item>
-      <a-button type="primary" html-type="submit" style="width: 100px">
-        搜索
-      </a-button>
-    </a-form-item>
-  </a-form>
-  <a-table
-    :columns="columns"
-    :data="dataList"
-    :pagination="{
-      showTotal: true,
-      pageSize: searchParams.pageSize,
-      current: searchParams.current,
-      total,
-    }"
-    @page-change="onPageChange"
-  >
-    <template #resultPicture="{ record }">
-      <a-image width="64" :src="record.resultPicture" />
-    </template>
-    <template #appType="{ record }">
-      {{ APP_TYPE_MAP[record.appType] }}
-    </template>
-    <template #scoringStrategy="{ record }">
-      {{ APP_SCORING_STRATEGY_MAP[record.scoringStrategy] }}
-    </template>
-    <template #createTime="{ record }">
-      {{ dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
-    </template>
-    <template #updateTime="{ record }">
-      {{ dayjs(record.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
-    </template>
-    <template #optional="{ record }">
-      <a-space>
-        <a-button status="danger" @click="doDelete(record)">删除</a-button>
-      </a-space>
-    </template>
-  </a-table>
+  <div id="myAnswerPage">
+    <a-form
+      :model="formSearchParams"
+      :style="{ marginBottom: '20px' }"
+      layout="inline"
+      @submit="doSearch"
+    >
+      <a-form-item field="resultName" label="结果名称">
+        <a-input
+          v-model="formSearchParams.resultName"
+          placeholder="请输入结果名称"
+          allow-clear
+        />
+      </a-form-item>
+      <a-form-item field="resultDesc" label="结果描述">
+        <a-input
+          v-model="formSearchParams.resultDesc"
+          placeholder="请输入结果描述"
+          allow-clear
+        />
+      </a-form-item>
+      <a-form-item field="appId" label="应用 id">
+        <a-input
+          v-model="formSearchParams.appId"
+          placeholder="请输入应用 id"
+          allow-clear
+        />
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" html-type="submit" style="width: 100px">
+          搜索
+        </a-button>
+      </a-form-item>
+    </a-form>
+    <a-table
+      :columns="columns"
+      :data="dataList"
+      :pagination="{
+        showTotal: true,
+        pageSize: searchParams.pageSize,
+        current: searchParams.current,
+        total,
+      }"
+      @page-change="onPageChange"
+    >
+      <template #resultPicture="{ record }">
+        <a-image width="64" :src="record.resultPicture" />
+      </template>
+      <template #appType="{ record }">
+        {{ APP_TYPE_MAP[record.appType] }}
+      </template>
+      <template #scoringStrategy="{ record }">
+        {{ APP_SCORING_STRATEGY_MAP[record.scoringStrategy] }}
+      </template>
+      <template #createTime="{ record }">
+        {{ dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+      </template>
+      <template #optional="{ record }">
+        <a-space>
+          <a-button status="danger" @click="doDelete(record)">删除</a-button>
+        </a-space>
+      </template>
+    </a-table>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
 import {
   deleteUserAnswerUsingPost,
-  listUserAnswerByPageUsingPost,
+  listMyUserAnswerVoByPageUsingPost,
 } from "@/api/userAnswerController";
 import API from "@/api";
 import message from "@arco-design/web-vue/es/message";
@@ -95,14 +87,14 @@ const initSearchParams = {
 const searchParams = ref<API.UserAnswerQueryRequest>({
   ...initSearchParams,
 });
-const dataList = ref<API.UserAnswer[]>([]);
+const dataList = ref<API.UserAnswerVO[]>([]);
 const total = ref<number>(0);
 
 /**
  * 加载数据
  */
 const loadData = async () => {
-  const res = await listUserAnswerByPageUsingPost(searchParams.value);
+  const res = await listMyUserAnswerVoByPageUsingPost(searchParams.value);
   if (res.data.code === 0) {
     dataList.value = res.data.data?.records || [];
     total.value = res.data.data?.total || 0;
@@ -204,18 +196,9 @@ const columns = [
     slotName: "scoringStrategy",
   },
   {
-    title: "用户 id",
-    dataIndex: "userId",
-  },
-  {
     title: "创建时间",
     dataIndex: "createTime",
     slotName: "createTime",
-  },
-  {
-    title: "更新时间",
-    dataIndex: "updateTime",
-    slotName: "updateTime",
   },
   {
     title: "操作",

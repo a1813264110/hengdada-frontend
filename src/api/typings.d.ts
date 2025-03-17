@@ -1,4 +1,10 @@
 declare namespace API {
+  type AiGenerateQuestionRequest = {
+    appId?: number;
+    optionNumber?: number;
+    questionNumber?: number;
+  };
+
   type App = {
     appDesc?: string;
     appIcon?: string;
@@ -92,6 +98,12 @@ declare namespace API {
   type BaseResponseBoolean_ = {
     code?: number;
     data?: boolean;
+    message?: string;
+  };
+
+  type BaseResponseListQuestionContentDTO_ = {
+    code?: number;
+    data?: QuestionContentDTO[];
     message?: string;
   };
 
@@ -201,6 +213,13 @@ declare namespace API {
     code?: number;
     data?: UserVO;
     message?: string;
+  };
+
+  type ChatRequest = {
+    maxTokens?: number;
+    prompt?: string;
+    systemMessage?: string;
+    temperature?: number;
   };
 
   type DeleteRequest = {

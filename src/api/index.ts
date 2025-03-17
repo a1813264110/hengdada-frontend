@@ -6,6 +6,7 @@ import * as appController from "./appController";
 import * as fileController from "./fileController";
 import * as questionController from "./questionController";
 import * as scoringResultController from "./scoringResultController";
+import * as siliconFlowController from "./siliconFlowController";
 import * as userController from "./userController";
 import * as userAnswerController from "./userAnswerController";
 export default {
@@ -13,6 +14,7 @@ export default {
   fileController,
   questionController,
   scoringResultController,
+  siliconFlowController,
   userController,
   userAnswerController,
 };

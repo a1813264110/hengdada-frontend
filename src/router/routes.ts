@@ -16,7 +16,7 @@ import AddAppPage from "@/views/add/AddAppPage.vue";
 import AddQuestionPage from "@/views/add/AddQuestionPage.vue";
 import AddScoringResultPage from "@/views/add/AddScoringResultPage.vue";
 import DoAnswerPage from "@/views/answer/DoAnswerPage.vue";
-import AnswerResultPage from "@/views/answer/AnswerResult.vue";
+import AnswerResultPage from "@/views/answer/AnswerResultPage.vue";
 import MyAnswerPage from "@/views/answer/MyAnswerPage.vue";
 
 export const routes: Array<RouteRecordRaw> = [
