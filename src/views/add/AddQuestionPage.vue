@@ -20,6 +20,9 @@
           <AiGenerateQuestionDrawer
             :appId="appId"
             :onSuccess="onAiGenerateQuestionSuccess"
+            :onSSESuccess="onAiGenerateQuestionSuccessSSE"
+            :onSSEStart="onSSEStart"
+            :onSSEClose="onSSEClose"
           />
         </a-space>
 
@@ -253,5 +256,31 @@ const handleSubmit = async () => {
 const onAiGenerateQuestionSuccess = (result: API.QuestionContentDTO[]) => {
   message.success(`生成题目成功,生成 ${result.length} 道题目`);
   questionContent.value = [...questionContent.value, ...result];
+};
+
+/**
+ * Ai生成题目成功后执行(sse)
+ * @param questions
+ */
+const onAiGenerateQuestionSuccessSSE = (result: API.QuestionContentDTO) => {
+  questionContent.value = [...questionContent.value, result];
+};
+
+/**
+ * SSE开始生成
+ * @param event
+ */
+const onSSEStart = (event: any) => {
+  message.success("sse开始");
+  console.log("SSE开始事件:", event);
+};
+
+/**
+ * SSE生成成功
+ * @param event
+ */
+const onSSEClose = (event: any) => {
+  message.success("sse生成完毕");
+  console.log("SSE结束事件:", event);
 };
 </script>
