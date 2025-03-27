@@ -58,7 +58,10 @@ import { useRouter } from "vue-router";
 import { listQuestionVoByPageUsingPost } from "@/api/questionController";
 import message from "@arco-design/web-vue/es/message";
 import { getAppVoByIdUsingGet } from "@/api/appController";
-import { addUserAnswerUsingPost } from "@/api/userAnswerController";
+import {
+  addUserAnswerUsingPost,
+  generateUserAnswerIdUsingGet,
+} from "@/api/userAnswerController";
 
 interface Props {
   appId: string;
@@ -71,6 +74,19 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const router = useRouter();
+
+const id = ref<number>();
+
+const generateId = async () => {
+  let res: any = await generateUserAnswerIdUsingGet();
+  if (res.data.code === 0 && res.data.data) {
+    id.value = res.data.data as any;
+  } else {
+    message.error("生成答案id失败，" + res.data.message);
+    //失败后再次请求一次后端
+    await generateId();
+  }
+};
 
 const app = ref<API.AppVO>({});
 // 题目内容结构（理解为题目列表）
@@ -97,6 +113,11 @@ const currentAnswer = ref<string>();
 const answerList = reactive<string[]>([]);
 // 是否正在提交结果
 const submitting = ref(false);
+
+//进入页面时，生成唯一id
+watchEffect(() => {
+  generateId();
+});
 
 /**
  * 加载数据
@@ -159,6 +180,7 @@ const doSubmit = async () => {
   const res = await addUserAnswerUsingPost({
     appId: props.appId as any,
     choices: answerList,
+    id: id.value,
   });
   if (res.data.code === 0 && res.data.data) {
     router.push(`/answer/result/${res.data.data}`);
